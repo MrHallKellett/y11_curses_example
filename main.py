@@ -1,11 +1,12 @@
 import curses
 
 def rgb(r, g, b):
-    return int(r)//3 + int(g)//3 +  int(b)//3
+    return "\x1b[38;2;{};{};{}m".format(r, g, b)
 
 def load_colours():
 
     colour_map = [""] * 26
+
     with open("colours.txt") as f:
         lines = f.readlines()
 
@@ -18,14 +19,11 @@ def load_colours():
             continue
         initial = colour[0]
         index = ord(initial) - 65        
-        curses.init_pair(index, eval(code), curses.COLOR_WHITE)
+        colour_map[index] = eval(code)
     
-    print(colour_map)
+    
     return colour_map
 
-
-load_colours()
-input()
 
 def game(screen):
     letter = "a"
@@ -52,7 +50,8 @@ def game(screen):
                 x -= 1
             elif key == 450:
                 x += 1
-        screen.addstr(y, x, letter, curses.color_pair(index))
+        
+        screen.addstr(y, x, colour)
 
         
 
